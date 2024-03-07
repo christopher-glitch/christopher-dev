@@ -1,0 +1,24 @@
+---
+import Latest from './Latest.astro';
+import Profile from './Profile.astro';
+---
+
+<div class="menu-section">
+	<Latest />
+	<Profile />
+</div>
+
+<style>
+	.menu-section {
+		width: 100%;
+		padding: 5px;
+		border-top: 0cap;
+		text-wrap: wrap;
+	}
+
+	@media (max-width: 720px) {
+		.menu-section {
+			display: none;
+		}
+	}
+</style>
