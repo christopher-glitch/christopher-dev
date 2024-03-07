@@ -18,7 +18,7 @@ const {slug, title, pubDate, tags} = Astro.props;
 	<div class="tags">
 		{tags!.map((tag) => (
 			<div class="tag">
-				{tag}
+				#{tag}
 			</div>
 		))
 		}
@@ -26,15 +26,6 @@ const {slug, title, pubDate, tags} = Astro.props;
 </a>
 
 <style>
-	a {
-		text-decoration: none;
-		transition: 0.3s ease;
-	}
-
-	p {
-		text-decoration: none;
-		transition: 0.3s ease;
-	}
 
 	.title {
 		margin: 0;

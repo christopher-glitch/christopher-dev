@@ -1,0 +1,92 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  posts: CollectionEntry<'entry'>[];
+}
+
+const { posts } = Astro.props;
+
+const tags: Record<string, number> = {};
+
+posts.forEach(post => {
+  post.data.tags!.forEach((tag: string) => {
+    tags[tag] = (tags[tag] || 0) + 1;
+  });
+});
+
+const sortedTags = Object.entries(tags).sort((a, b) => b[1] - a[1]);
+---
+
+<div class="tags">
+	<h4>Tags</h4>
+	<ul>
+		{
+			sortedTags.map(([tag, count]) => (
+				<li>
+					<a href={`/tags/${tag}`}>
+						#{tag} ({count})
+					</a>
+				</li>
+			))
+		}
+	</ul>
+</div>
+
+<style>
+	h4 {
+		font-family: "Anta";
+		font-size: 1.5em;
+	}
+
+	p {
+		margin: auto;
+		font-size: 1.2rem;
+	}
+
+	ul {
+		display: flex;
+		flex-direction: column;
+		list-style-type: none;
+		margin-left: 5%;
+		padding: 0;
+		gap: 0.6rem;
+	}
+
+	ul li {
+		width: calc(50% - 1rem);
+	}
+	
+	ul li * {
+		text-decoration: none;
+		transition: 0.2s ease;
+	}
+
+	li a{
+		text-decoration: none;
+	}
+
+	.tags {
+		margin-bottom: 3rem;
+	}
+
+	.date {
+		margin: 0;
+		color: rgb(var(--gray));
+		font-size: 0.7rem;
+	}
+
+	.title {
+		margin: 0;
+		line-height: 1;
+		font-size: 1.2rem;
+		font-family: "Atkinson";
+	}
+
+	a {
+		font-size: 1rem;
+		background-color: #fff;
+		padding: 3%;
+		text-decoration: none;
+	}
+</style>

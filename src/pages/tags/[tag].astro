@@ -1,0 +1,70 @@
+---
+import BaseHead from "../../components/BaseHead.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
+import { getCollection } from "astro:content";
+import Menu from "../../components/menu/Menu.astro";
+import Entry from "../../components/entry/Entry.astro";
+
+export async function getStaticPaths() {
+	const posts = (await getCollection('entry')).sort(
+		(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+	);
+	const tags = new Set<string>();
+  posts.forEach(post => post.data.tags?.forEach(tag => tags.add(tag)));
+
+  return Array.from(tags).map(tag => ({
+    params: { tag: tag },
+    props: { posts: posts },
+  }));
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+
+const filteredPosts = posts.filter((post) => post.data.tags?.includes(tag));
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			main {
+				width: 1080px;
+				min-height: 1600px;
+			}
+
+			.description {
+				display: flex;
+				justify-content: center;
+				margin: 3em 0;
+			}
+
+			.contents {
+				display: grid;
+				grid-template-columns: 7fr 3fr;
+			}
+
+			@media (max-width: 720px) {
+				.contents {
+					display: inline;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section>
+				<div class="description">{SITE_DESCRIPTION}</div>
+				<div class="contents">
+					<Entry posts={filteredPosts} />
+					<Menu />
+				</div>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>

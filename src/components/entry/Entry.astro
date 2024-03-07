@@ -1,10 +1,13 @@
 ---
-import { getCollection } from 'astro:content';
 import EntryCard from './EntryCard.astro';
+import type { CollectionEntry } from 'astro:content';
 
-const posts = (await getCollection('entry')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
+
+interface Props {
+  posts: CollectionEntry<'entry'>[];
+}
+
+const { posts } = Astro.props;
 ---
 <div>
 	<h4 class="heading">Entry</h4>
