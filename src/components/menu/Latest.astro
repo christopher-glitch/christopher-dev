@@ -1,0 +1,81 @@
+---
+import { getCollection } from 'astro:content';
+import FormattedDate from '../FormattedDate.astro';
+
+const latestPosts = (await getCollection('entry')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+).slice(0, 4);
+---
+<div class="latest">
+	<h4> Latest </h4>
+	<ul>
+		{
+			latestPosts.map((post) => (
+				<li>
+					<a href={`/entry/${post.slug}/`} class="card">
+						<p class="date">
+							<FormattedDate date={post.data.pubDate} />
+						</p>
+						<h4 class="title">{post.data.title}</h4>
+					</a>
+				</li>
+			))
+		}
+	</ul>
+</div>
+
+<style>
+	h4 {
+		font-family: 'Anta';
+		font-size: 1.5em;
+	}
+
+	p {
+		margin: auto;
+		font-size: 1.2rem;
+	}
+
+	ul {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	li a {
+		text-decoration: none;
+	}
+
+	.latest {
+		margin-bottom: 3rem;
+	}
+
+	.date {
+		margin: 0;
+		color: rgb(var(--gray));
+		font-size: 0.7rem;
+	}
+
+	.title {
+		margin: 0;
+		line-height: 1;
+		font-size: 1.2rem;
+		font-family: 'Atkinson';
+	}
+
+	a {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-around;
+		width: 90%;
+		height: 4em;
+		background-color: #fff; 
+		border-bottom: 1px solid #000000; 
+		padding:3%; 
+		text-decoration: none; 
+		transition: box-shadow 0.3s ease; 
+	}
+
+</style>

@@ -1,0 +1,51 @@
+---
+import EntryCard from './EntryCard.astro';
+import type { CollectionEntry } from 'astro:content';
+
+
+interface Props {
+  posts: CollectionEntry<'entry'>[];
+}
+
+const { posts } = Astro.props;
+---
+<div>
+	<h4 class="heading">Entry</h4>
+	<ul>
+	{
+		posts.map((post) => (
+			<li>
+				<EntryCard slug={post.slug} title={post.data.title} pubDate={post.data.pubDate} tags={post.data.tags}/>
+			</li>
+		))
+	}
+	</ul>
+</div>
+<style>
+
+	ul {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem 0;
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.heading {
+		margin-bottom: 40px;
+		border-bottom: 1.5px solid #999999;
+		width: 92%;
+		padding: 5px;
+		font-family: 'Anta';
+	}
+	
+	@media (max-width: 720px) {
+		ul li {
+			width: 100%;
+		}
+		.heading {
+			width: 92%;
+		}
+	}
+</style>

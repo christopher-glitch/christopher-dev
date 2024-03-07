@@ -5,8 +5,7 @@
  */
 
 :root {
-	--accent: #2337ff;
-	--accent-dark: #000d8a;
+	--accent: #000a52;
 	--black: 15, 18, 25;
 	--gray: 96, 115, 159;
 	--gray-light: 229, 233, 240;
@@ -53,7 +52,7 @@
 
 
 body {
-	font-family: 'Atkinson', sans-serif;
+	font-family: 'MplusRounded', 'Atkinson', sans-serif;
 	margin: 0;
 	padding: 0;
 	text-align: left;
@@ -78,6 +77,7 @@ h3,
 h4,
 h5,
 h6 {
+	font-family: 'Atkinson';
 	margin: 0 0 0.5rem 0;
 	color: rgb(var(--black));
 	line-height: 1.2;

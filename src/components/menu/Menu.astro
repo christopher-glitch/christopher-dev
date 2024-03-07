@@ -1,0 +1,31 @@
+---
+import Latest from './Latest.astro';
+import Profile from './Profile.astro';
+import TagList from './TagList.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('entry')).sort(
+	(a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf()
+);
+---
+
+<div class="menu-section">
+	<Latest />
+	<TagList posts={posts}/>
+	<Profile />
+</div>
+
+<style>
+	.menu-section {
+		width: 100%;
+		padding: 5px;
+		border-top: 0cap;
+		text-wrap: wrap;
+	}
+
+	@media (max-width: 720px) {
+		.menu-section {
+			display: none;
+		}
+	}
+</style>

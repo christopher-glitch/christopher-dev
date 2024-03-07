@@ -1,0 +1,77 @@
+---
+import FormattedDate from '../FormattedDate.astro';
+
+interface Props {
+	slug: string;
+	title: string;
+	pubDate: Date;
+	tags?: string[];
+}
+
+const {slug, title, pubDate, tags} = Astro.props;
+---
+<a href={`/entry/${slug}/`} class="card">
+	<p class="date">
+		<FormattedDate date={pubDate} />
+	</p>
+	<h4 class="title">{title}</h4>
+	<div class="tags">
+		{tags!.map((tag) => (
+			<div class="tag">
+				#{tag}
+			</div>
+		))
+		}
+	</div>
+</a>
+
+<style>
+
+	.title {
+		margin: 0;
+		color: rgb(var(--black));
+		line-height: 1;
+	}
+	
+	.date {
+		margin: 0;
+		color: rgb(var(--gray));
+		font-size: 0.8rem;
+	}
+
+	a.card {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-around;
+		width: 90%;
+		min-height: 7em;
+		gap: 0.1rem;
+		background-color: #fff; 
+		border: 1px solid #ddd; 
+		border-radius: 4px; 
+		padding:3%; 
+		text-decoration: none; 
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+		transition: box-shadow 0.3s ease; 
+	}
+
+	a.card:hover h4,
+	a.card:hover .date {
+		color: rgb(var(--accent));
+	}
+
+	a.card:hover {
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.313); 
+	}
+
+	a.card .tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.3rem;
+	}
+
+	.tag{
+		font-size: 1rem;
+	}
+
+</style>
