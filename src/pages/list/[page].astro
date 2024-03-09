@@ -1,35 +1,37 @@
 ---
-import Blog from '../layouts/Blog.astro';
-import { SITE_TITLE, SITE_DESCRIPTION, PAGE_SIZE } from '../consts';
 import { getCollection } from 'astro:content';
-import Entry from '../components/entry/Entry.astro';
+import Blog from '../../layouts/Blog.astro';
+import { SITE_TITLE, SITE_DESCRIPTION, PAGE_SIZE } from '../../consts';
+import Entry from '../../components/entry/Entry.astro';
+import type { GetStaticPathsOptions } from 'astro';
 
-const posts = (await getCollection('entry')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
+export async function getStaticPaths({ paginate } : GetStaticPathsOptions) {
+	const posts = await getCollection('entry');
+	return paginate(posts, { pageSize: PAGE_SIZE });
+}
 
-const headPosts = posts.slice(0, PAGE_SIZE);
-const maxPage = Math.ceil(posts.length/PAGE_SIZE);
+const { page } = Astro.props;
 ---
 
 <Blog title={SITE_TITLE}, description={SITE_DESCRIPTION}>
 	<div>
-		<Entry posts={headPosts} />
+		<Entry posts={page.data} />
 		<div class="pagination">
 			<ul>
 				<li>
-					<a class="inactive">PREV</a>
+					{page.url.prev ? <a href={page.url.prev}>PREV</a> : <a class="inactive">PREV</a>}
 				</li>
 			</ul>
-			<p>1/{maxPage}</p>
+			<p>{page.currentPage}/{page.lastPage}</p>
 			<ul>
 				<li>
-					{maxPage === 1 ? <a class="inactive">NEXT</a> : <a href={`/list/2`}>NEXT</a>}				
+					{page.url.next ? <a href={page.url.next}>NEXT</a> : <a class="inactive">NEXT</a>}
 				</li>
 			</ul>
 		</div>
-	<div>
+	</div>
 </Blog>
+
 
 <style>
 	.pagination {
@@ -54,7 +56,7 @@ const maxPage = Math.ceil(posts.length/PAGE_SIZE);
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
 		transition: box-shadow 0.3s ease; 
 	}
-	
+
 	.inactive {
 		pointer-events: none;
     text-decoration: none;
