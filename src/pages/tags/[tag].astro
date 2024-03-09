@@ -1,11 +1,9 @@
 ---
-import BaseHead from "../../components/BaseHead.astro";
-import Header from "../../components/Header.astro";
-import Footer from "../../components/Footer.astro";
-import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
+import { SITE_TITLE, PAGE_SIZE } from "../../consts";
 import { getCollection } from "astro:content";
-import Menu from "../../components/menu/Menu.astro";
 import Entry from "../../components/entry/Entry.astro";
+import Blog from "../../layouts/Blog.astro";
+import Pagination from "../../components/Pagination.astro";
 
 export async function getStaticPaths() {
 	const posts = (await getCollection('entry')).sort(
@@ -24,47 +22,20 @@ const { tag } = Astro.params;
 const { posts } = Astro.props;
 
 const filteredPosts = posts.filter((post) => post.data.tags?.includes(tag));
+const maxPage = Math.ceil(filteredPosts.length/PAGE_SIZE);
+
+const headFilteredPosts = filteredPosts.slice(0, PAGE_SIZE);
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 1080px;
-				min-height: 1600px;
-			}
+<Blog title={SITE_TITLE}, description={`Tag:${tag}`}>
+	<div>
+		<Entry posts={headFilteredPosts} />
+		<Pagination 
+			prev={ undefined } 
+			next={(maxPage==1)? undefined:`/tags/${tag}/list/2`} 
+			maxPage={maxPage}
+			currentPage={1}
+		/>
+	</div>
+</Blog>
 
-			.description {
-				display: flex;
-				justify-content: center;
-				margin: 3em 0;
-			}
-
-			.contents {
-				display: grid;
-				grid-template-columns: 7fr 3fr;
-			}
-
-			@media (max-width: 720px) {
-				.contents {
-					display: inline;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<Header />
-		<main>
-			<section>
-				<div class="description">{SITE_DESCRIPTION}</div>
-				<div class="contents">
-					<Entry posts={filteredPosts} />
-					<Menu />
-				</div>
-			</section>
-		</main>
-		<Footer />
-	</body>
-</html>
