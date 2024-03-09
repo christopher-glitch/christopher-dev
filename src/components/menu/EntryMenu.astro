@@ -9,20 +9,6 @@ interface Props {
 
 const { headings } = Astro.props;
 ---
-<div class="menu-section">
-	<Profile />
-	{(headings.length > 0) && <Agenda headings={headings}/> }
-</div>
 
-<style>
-	.menu-section {
-		width: 100%;
-		display: block;
-	}
-
-	@media (max-width: 720px) {
-		.menu-section {
-			display: none;
-		}
-	}
-</style>
+<Profile />
+{(headings.length > 0) && <Agenda headings={headings}/> }

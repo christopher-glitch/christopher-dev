@@ -46,6 +46,7 @@ const { title, description } = Astro.props;
 		justify-content: center;
 		margin: 3em 0;
 		font-size: 1.5em;
+		font-weight: 700;
 	}
 	.contents {
 		display: flex;
@@ -60,7 +61,7 @@ const { title, description } = Astro.props;
 		width: 280px;
 	}
 
-	@media (max-width: 768px) {
+	@media (max-width: 920px) {
 		.description {
 			font-size: 1rem;
 		}
@@ -68,7 +69,7 @@ const { title, description } = Astro.props;
 			width: 100%;
 		}
 
-		.aside {
+		aside {
 			display: none;
 		}
 	}
