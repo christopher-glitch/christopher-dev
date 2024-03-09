@@ -10,17 +10,14 @@ const posts = (await getCollection('entry')).sort(
 ---
 
 <div class="menu-section">
-	<Latest />
-	<TagList posts={posts}/>
 	<Profile />
+	<TagList posts={posts}/>
+	<Latest />
 </div>
 
 <style>
 	.menu-section {
 		width: 100%;
-		padding: 5px;
-		border-top: 0cap;
-		text-wrap: wrap;
 	}
 
 	@media (max-width: 720px) {

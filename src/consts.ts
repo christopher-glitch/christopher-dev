@@ -4,4 +4,4 @@
 export const SITE_TITLE = 'The MemoRandum';
 export const SITE_DESCRIPTION = 'コーディングとかソフトシンセの備忘録です。';
 
-export const PAGE_SIZE = 1;
+export const PAGE_SIZE = 5;
