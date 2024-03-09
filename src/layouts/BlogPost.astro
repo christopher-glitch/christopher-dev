@@ -4,41 +4,41 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
-import Blog from './Blog.astro';
-import Menu from '../components/menu/Menu.astro';
-import { componentIsHTMLElement } from 'astro/runtime/server/render/dom.js';
+import EntryMenu from '../components/menu/EntryMenu.astro';
+import type { MarkdownHeading } from 'astro';
 
-type Props = CollectionEntry<'entry'>['data'];
+interface Props {
+	entry: CollectionEntry<'entry'>['data'],
+	headings: MarkdownHeading[],
+} 
 
-const { title, description, pubDate, updatedDate, tags} = Astro.props;
-
-console.log(tags);
+const { entry, headings } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={title} description={description} />
+		<BaseHead title={entry.title} description={entry.description} />
 	</head>
 	<body>
 		<Header />
 		<main>
 			<section>
 				<div class="title">
-					<h1>{title}</h1>
+					<h1>{entry.title}</h1>
 						<div class="date">
-							公開日: <FormattedDate date={pubDate} />
+							公開日: <FormattedDate date={entry.pubDate} />
 							{
-								updatedDate && (
+								entry.updatedDate && (
 									<div class="last-updated-on">
-										更新: <FormattedDate date={updatedDate} />
+										更新: <FormattedDate date={entry.updatedDate} />
 									</div>
 								)
 							}
 						</div>
 						<div class="tags">
 							{
-								tags!.map(tag =>
+								entry.tags!.map(tag =>
 									<a href={`/tags/${tag}`}>#{tag}</a>
 								)
 							}
@@ -50,9 +50,9 @@ console.log(tags);
 							<slot />
 						</div>
 					</article>
-					<div class="aside">
-						<Menu />
-					</div>
+					<aside>
+						<EntryMenu headings={headings}/>
+					</aside>
 				</div>
 			</section>
 		</main>
@@ -78,7 +78,7 @@ console.log(tags);
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
 	}
 
-	.aside {
+	aside {
 		width: 280px;
 	}
 

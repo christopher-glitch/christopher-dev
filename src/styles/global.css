@@ -45,7 +45,7 @@
 @font-face {
 	font-family: 'MplusRounded';
 	src: url('/fonts/MPLUSRounded1c-Bold.ttf') format('truetype');
-	font-weight: 400;
+	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
 }
@@ -185,3 +185,5 @@ hr {
 	/* added line to stop words getting smushed together (as they go onto seperate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
 }
+
+

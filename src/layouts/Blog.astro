@@ -2,7 +2,7 @@
 import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-import Menu from "../components/menu/Menu.astro";
+import HomeMenu from "../components/menu/HomeMenu.astro";
 
 interface Props {
 	title: string;
@@ -26,9 +26,9 @@ const { title, description } = Astro.props;
 					<div class="entry">
 						<slot />
 					</div>
-					<div class="aside">
-						<Menu/>
-					</div>
+					<aside>
+						<HomeMenu/>
+					</aside>
 				</div>
 			</section>
 		</main>
@@ -56,7 +56,7 @@ const { title, description } = Astro.props;
 		width: calc(100% - 300px);
 	}
 
-	.aside {
+	aside {
 		width: 280px;
 	}
 
