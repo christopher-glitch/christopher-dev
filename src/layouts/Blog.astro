@@ -1,0 +1,63 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
+import { getCollection } from "astro:content";
+import Menu from "../components/menu/Menu.astro";
+import Entry from "../components/entry/Entry.astro";
+
+const posts = (await getCollection("entry")).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+interface Props {
+	title: string;
+	description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+		<style>
+			main {
+				width: 1080px;
+				min-height: 1400px;
+			}
+
+			.description {
+				display: flex;
+				justify-content: center;
+				margin: 3em 0;
+			}
+
+			.contents {
+				display: grid;
+				grid-template-columns: 7fr 3fr;
+			}
+
+			@media (max-width: 720px) {
+				.contents {
+					display: inline;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section>
+				<div class="description">{description}</div>
+				<div class="contents">
+					<slot />
+					<Menu posts={posts} />
+				</div>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
