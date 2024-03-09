@@ -2,14 +2,7 @@
 import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
-import { getCollection } from "astro:content";
-import Menu from "../components/menu/Menu.astro";
-import Entry from "../components/entry/Entry.astro";
-
-const posts = (await getCollection("entry")).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+import HomeMenu from "../components/menu/HomeMenu.astro";
 
 interface Props {
 	title: string;
@@ -23,29 +16,6 @@ const { title, description } = Astro.props;
 <html lang="en">
 	<head>
 		<BaseHead title={title} description={description} />
-		<style>
-			main {
-				width: 1080px;
-				min-height: 1400px;
-			}
-
-			.description {
-				display: flex;
-				justify-content: center;
-				margin: 3em 0;
-			}
-
-			.contents {
-				display: grid;
-				grid-template-columns: 7fr 3fr;
-			}
-
-			@media (max-width: 720px) {
-				.contents {
-					display: inline;
-				}
-			}
-		</style>
 	</head>
 	<body>
 		<Header />
@@ -53,11 +23,53 @@ const { title, description } = Astro.props;
 			<section>
 				<div class="description">{description}</div>
 				<div class="contents">
-					<slot />
-					<Menu posts={posts} />
+					<div class="entry">
+						<slot />
+					</div>
+					<aside>
+						<HomeMenu/>
+					</aside>
 				</div>
 			</section>
 		</main>
 		<Footer />
 	</body>
 </html>
+
+<style>
+	main {
+		width: 1080px;
+	}
+
+	.description {
+		display: flex;
+		justify-content: center;
+		margin: 3em 0;
+		font-size: 1.5em;
+	}
+	.contents {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.entry {
+		width: calc(100% - 300px);
+	}
+
+	aside {
+		width: 280px;
+	}
+
+	@media (max-width: 768px) {
+		.description {
+			font-size: 1rem;
+		}
+		.entry {
+			width: 100%;
+		}
+
+		.aside {
+			display: none;
+		}
+	}
+</style>
