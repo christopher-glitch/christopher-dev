@@ -1,0 +1,14 @@
+---
+import type { MarkdownHeading } from "astro";
+import Agenda from "./Agenda.astro";
+import Profile from "./Profile.astro";
+
+interface Props {
+	headings: MarkdownHeading[],
+} 
+
+const { headings } = Astro.props;
+---
+
+<Profile />
+{(headings.length > 0) && <Agenda headings={headings}/> }

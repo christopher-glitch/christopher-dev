@@ -1,0 +1,61 @@
+---
+import { boolean } from 'astro/zod';
+
+interface Props {
+	prev: string | undefined,
+	next: string | undefined,
+	maxPage: number,
+	currentPage: number,
+}
+
+const {prev, next, maxPage, currentPage} = Astro.props;
+---
+<div class="pagination">
+	<ul>
+		<li>
+			{prev? <a href={prev}>PREV</a>: <a class="inactive">PREV</a>}			
+		</li>
+	</ul>
+	<p>{currentPage}/{maxPage}</p>
+	<ul>
+		<li>
+			{next? <a href={next}>NEXT</a> : <a class="inactive">NEXT</a>}				
+		</li>
+	</ul>
+</div>
+
+<style>
+	.pagination {
+		display:flex;
+		justify-content: space-around;
+	}
+
+	ul {
+		list-style-type: none;
+		padding: 0;
+	}
+
+	p {
+		font-weight: 700;
+	}
+
+	li a {
+		display: flex;
+		justify-content: center;
+		width: 70px;
+		text-decoration: none;
+		font-weight: 700;
+		background:#edffe8;
+		padding: 3px;
+		border-radius: 6px; 
+		text-decoration: none; 
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+		transition: box-shadow 0.3s ease; 
+	}
+	
+	.inactive {
+		pointer-events: none;
+    text-decoration: none;
+		color: #000a527b;
+	}
+</style>

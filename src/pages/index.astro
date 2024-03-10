@@ -1,56 +1,57 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import Blog from '../layouts/Blog.astro';
+import { SITE_TITLE, SITE_DESCRIPTION, PAGE_SIZE } from '../consts';
 import { getCollection } from 'astro:content';
-import Menu from '../components/menu/Menu.astro';
 import Entry from '../components/entry/Entry.astro';
+import Pagination from '../components/Pagination.astro';
 
 const posts = (await getCollection('entry')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
+
+const headPosts = posts.slice(0, PAGE_SIZE);
+const maxPage = Math.ceil(posts.length/PAGE_SIZE);
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 1080px;
-				min-height: 1600px;
-			}
+<Blog title={SITE_TITLE}, description={SITE_DESCRIPTION}>
+	<div>
+		<Entry posts={headPosts} />
+		<Pagination 
+			prev={ undefined } 
+			next={(maxPage==1)? undefined:`/list/2`} 
+			maxPage={maxPage}
+			currentPage={1}
+		/>
+	<div>
+</Blog>
 
-			.description{
-				display: flex;
-				justify-content: center;
-				margin: 3em 0;
-			}
+<style>
+	.pagination {
+		display:flex;
+		justify-content: space-around;
+	}
 
-			.contents{
-				display: grid;
-				grid-template-columns: 7fr 3fr;
-			}
+	ul {
+		list-style-type: none;
+		padding: 0;
+	}
 
-			@media (max-width: 720px) {
-				.contents{
-					display: inline;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<Header />
-		<main>
-			<section>
-				<div class="description">{SITE_DESCRIPTION}</div>
-				<div class="contents">
-					<Entry posts={posts} />
-					<Menu posts={posts} />
-				</div>
-			</section>
-		</main>
-		<Footer />
-	</body>
-</html>
+	li a {
+		display: flex;
+		justify-content: center;
+		width: 70px;
+		text-decoration: none;
+		background:#edffe8;
+		padding: 3px;
+		border-radius: 6px; 
+		text-decoration: none; 
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+		transition: box-shadow 0.3s ease; 
+	}
+	
+	.inactive {
+		pointer-events: none;
+    text-decoration: none;
+		color: #000a527b;
+	}
+</style>
