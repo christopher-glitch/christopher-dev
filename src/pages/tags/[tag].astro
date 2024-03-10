@@ -5,6 +5,8 @@ import Entry from "../../components/entry/Entry.astro";
 import Blog from "../../layouts/Blog.astro";
 import Pagination from "../../components/Pagination.astro";
 
+export const prerender = true;
+
 export async function getStaticPaths() {
 	const posts = (await getCollection('entry')).sort(
 		(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
