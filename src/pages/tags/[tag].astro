@@ -17,14 +17,14 @@ export async function getStaticPaths() {
 
   return Array.from(tags).map(tag => ({
     params: { tag: tag.name },
-    props: { 	posts: posts.filter((post) => post.tags.includes(tag)),
+    props: { 	filteredPosts: posts.filter((post) => post.tags.includes(tag)),
 							maxPage: Math.ceil(posts.length/PAGE_SIZE)},
   }));
 }
 
 const { tag } = Astro.params;
-const { posts, maxPage } = Astro.props;
-const headFilteredPosts = posts.slice(0, PAGE_SIZE);
+const { filteredPosts, maxPage } = Astro.props;
+const headFilteredPosts = filteredPosts.slice(0, PAGE_SIZE);
 ---
 
 <Blog title={SITE_TITLE}, description={`Tag:${tag}`}>
