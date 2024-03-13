@@ -15,11 +15,11 @@ export async function getStaticPaths() {
 	);
 	let params: any[] = [];
 
-	for (let i = 1; i <= posts.length; i++) {
+	for (let page = 1; page <= posts.length; page++) {
 		const startIndex = (page - 1) * PAGE_SIZE;
 		const endIndex = startIndex + PAGE_SIZE;
 		params.push({
-			params: { page: i },
+			params: { page: page },
 			props: {
 				pagePosts: posts.slice(startIndex, endIndex),
 				maxPage: Math.ceil(posts.length / PAGE_SIZE),
@@ -27,7 +27,7 @@ export async function getStaticPaths() {
 		});
 	}
 
-	
+
 	return params;
 }
 
