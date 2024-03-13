@@ -1,14 +1,14 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import FormattedDate from '../components/FormattedDate.astro';
-import EntryMenu from '../components/menu/EntryMenu.astro';
-import type { EntryModel } from '../lib/model';
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import FormattedDate from "../components/FormattedDate.astro";
+import EntryMenu from "../components/menu/EntryMenu.astro";
+import type { EntryModel } from "../lib/model";
 
 interface Props {
-	entry: EntryModel
-} 
+	entry: EntryModel;
+}
 
 const { entry } = Astro.props;
 ---
@@ -24,24 +24,26 @@ const { entry } = Astro.props;
 			<section>
 				<div class="title">
 					<h1>{entry.title}</h1>
-						<div class="date">
-							公開日: <FormattedDate date={entry.createdAt} />
-							{
-								entry.updatedAt && (
-									<div class="last-updated-on">
-										更新: <FormattedDate date={entry.updatedAt} />
-									</div>
-								)
-							}
+					<div class="date">
+						<div>
+							公開: <FormattedDate date={entry.createdAt} />
 						</div>
-						<div class="tags">
-							{
-								entry.tags!.map(tag =>
-									<a href={`/tags/${tag.name}`}>#{tag.name}</a>
-								)
-							}
-						</div>
+						{
+							entry.updatedAt && (
+								<div>
+									更新: <FormattedDate date={entry.updatedAt} />
+								</div>
+							)
+						}
 					</div>
+					<div class="tags">
+						{
+							entry.tags!.map((tag) => (
+								<a href={`/tags/${tag.name}`}>#{tag.name}</a>
+							))
+						}
+					</div>
+				</div>
 				<div class="contents">
 					<article class="entry">
 						<div class="prose">
@@ -49,81 +51,97 @@ const { entry } = Astro.props;
 						</div>
 					</article>
 					<aside>
-						<EntryMenu/>
+						<EntryMenu />
 					</aside>
 				</div>
 			</section>
 		</main>
 		<Footer />
+		<style>
+			main {
+				width: 1080px;
+			}
+
+			.contents {
+				display: flex;
+				justify-content: space-between;
+			}
+
+			.entry {
+				width: calc(100% - 300px);
+				margin-top: 2.8%;
+				border: 1px solid #ddd;
+				border-radius: 5px;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			}
+
+			aside {
+				width: 280px;
+			}
+
+			@media (max-width: 920px) {
+				.description {
+					font-size: 1rem;
+				}
+				.entry {
+					width: 100%;
+				}
+				aside {
+					display: none;
+				}
+			}
+
+			.date {
+				display: flex;
+				justify-content: center;
+				font-size: 1rem;
+				font-weight: 700;
+				margin-bottom: 1.5em;
+				color: rgb(var(--gray));
+			}
+
+			.date > div {
+				margin: 0.7rem;
+			}
+
+			.title {
+				margin-bottom: 0.8em;
+				padding: 1.5em 0;
+				text-align: center;
+				line-height: 1;
+				font-size: 1em;
+			}
+
+			.title h1 {
+				margin: 0 0 0.5em 0;
+			}
+
+			.tags {
+				display: flex;
+				justify-content: center;
+				margin-bottom: 1rem;
+			}
+
+			.tags a {
+				text-decoration: none;
+				margin: 0.8rem;
+				font-weight: 700;
+				font-size: 1rem;
+				border: 2px solid #abdee3;
+				padding: 3px 5px;
+				border-radius: 7%;
+				font-weight: 700;
+				transition: background-color 0.3s ease;
+			}
+
+			.tags a:hover {
+				background-color: #abdee3;
+			}
+
+			.prose {
+				padding: 2em;
+				font-weight: 700;
+			}
+		</style>
 	</body>
 </html>
-
-<style>
-	main {
-		width: 1080px;
-	}
-
-	.contents {
-		display: flex;
-		justify-content: space-between;
-	}
-
-	.entry {
-		width: calc(100% - 300px);
-		margin-top: 2.8%;
-		border: 1px solid #ddd;
-		border-radius: 5px;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
-	}
-
-	aside {
-		width: 280px;
-	}
-
-	@media (max-width: 920px) {
-		.description {
-			font-size: 1rem;
-		}
-		.entry {
-			width: 100%;
-		}
-		aside {
-			display: none;
-		}
-	}
-
-	.date {
-		font-size: 1rem;
-		margin-bottom: 1.5em;
-		color: rgb(var(--gray));
-	}
-
-	.title {
-		margin-bottom: 0.8em;
-		padding: 1.5em 0;
-		text-align: center;
-		line-height: 1;
-		font-size: 1em;
-	}
-
-	.title h1 {
-		margin: 0 0 1em 0;
-	}
-
-	.tags {
-		display: flex;
-		justify-content: center;
-		margin-bottom: 1rem;
-	}
-
-	.tags a {
-		text-decoration: none;
-		padding: 0.4rem;
-	}
-
-	.prose {
-		padding: 2em;
-		color: rgb(var(--gray-dark));
-	}
-
-</style>
