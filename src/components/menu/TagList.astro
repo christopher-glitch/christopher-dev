@@ -1,17 +1,13 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import { getEntryResponse } from '../../lib/client';
+import type { TagModel } from '../../lib/model';
 
-interface Props {
-  posts: CollectionEntry<'entry'>[];
-}
-
-const { posts } = Astro.props;
 
 const tags: Record<string, number> = {};
 
-posts.forEach(post => {
-  post.data.tags!.forEach((tag: string) => {
-    tags[tag] = (tags[tag] || 0) + 1;
+(await getEntryResponse()).contents.forEach(post => {
+		post.tags.forEach((t: TagModel) => {
+    tags[t.name] = (tags[t.name] || 0) + 1;
   });
 });
 
@@ -95,6 +91,6 @@ const sortedTags = Object.entries(tags).sort((a, b) => b[1] - a[1]);
 	}
 
 	a:hover {
-		background-color: #ddfcff;
+		background-color: #abdee3;
 	}
 </style>

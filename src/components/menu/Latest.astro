@@ -1,22 +1,22 @@
 ---
-import { getCollection } from 'astro:content';
+import { getEntryResponse } from '../../lib/client';
 import FormattedDate from '../FormattedDate.astro';
 
-const latestPosts = (await getCollection('entry')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-).slice(0, 4);
+const posts = (await getEntryResponse()).contents
+	.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)).slice(0, 4);
+
 ---
 <div class="latest">
 	<h4> Latest </h4>
 	<ul>
 		{
-			latestPosts.map((post) => (
+			posts.map((post) => (
 				<li>
-					<a href={`/entry/${post.slug}/`} class="card">
+					<a href={`/entry/${post.id}/`} class="card">
 						<p class="date">
-							<FormattedDate date={post.data.pubDate} />
+							<FormattedDate date={post.createdAt} />
 						</p>
-						<h4 class="title">{post.data.title}</h4>
+						<h4 class="title">{post.title}</h4>
 					</a>
 				</li>
 			))

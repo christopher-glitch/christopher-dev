@@ -1,31 +1,29 @@
 ---
 import { SITE_TITLE, PAGE_SIZE } from "../../consts";
-import { getCollection } from "astro:content";
 import Entry from "../../components/entry/Entry.astro";
 import Blog from "../../layouts/Blog.astro";
 import Pagination from "../../components/Pagination.astro";
+import { getEntryResponse } from "../../lib/client";
+import type { TagModel } from "../../lib/model";
 
 export const prerender = true;
 
 export async function getStaticPaths() {
-	const posts = (await getCollection('entry')).sort(
-		(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+	const posts = (await getEntryResponse()).contents.sort(
+		(a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
 	);
-	const tags = new Set<string>();
-  posts.forEach(post => post.data.tags?.forEach(tag => tags.add(tag)));
+	const tags = new Set<TagModel>();
+  posts.forEach(post => post.tags.forEach(tag => tags.add(tag)));
 
   return Array.from(tags).map(tag => ({
-    params: { tag: tag },
-    props: { posts: posts },
+    params: { tag: tag.name },
+    props: { 	filteredPosts: posts.filter((post) => post.tags.includes(tag)),
+							maxPage: Math.ceil(posts.length/PAGE_SIZE)},
   }));
 }
 
 const { tag } = Astro.params;
-const { posts } = Astro.props;
-
-const filteredPosts = posts.filter((post) => post.data.tags?.includes(tag));
-const maxPage = Math.ceil(filteredPosts.length/PAGE_SIZE);
-
+const { filteredPosts, maxPage } = Astro.props;
 const headFilteredPosts = filteredPosts.slice(0, PAGE_SIZE);
 ---
 

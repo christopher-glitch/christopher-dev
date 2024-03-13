@@ -1,0 +1,20 @@
+---
+import BlogPost from '../../layouts/BlogPost.astro';
+import { getEntryResponse } from '../../lib/client';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+	const posts = (await getEntryResponse()).contents;
+	return posts.map((post) => ({
+		params: { id: post.id },
+		props: post,
+	}));
+}
+
+const post = Astro.props;
+---
+
+<BlogPost entry = {post}>
+	<div set:html={post.content}></div>
+</BlogPost>

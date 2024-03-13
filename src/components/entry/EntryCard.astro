@@ -1,11 +1,12 @@
 ---
+import type { TagModel } from '../../lib/model';
 import FormattedDate from '../FormattedDate.astro';
 
 interface Props {
 	slug: string;
 	title: string;
-	pubDate: Date;
-	tags?: string[];
+	pubDate: string;
+	tags?: TagModel[];
 }
 
 const {slug, title, pubDate, tags} = Astro.props;
@@ -17,8 +18,8 @@ const {slug, title, pubDate, tags} = Astro.props;
 	<a href={`/entry/${slug}/`} class="outer-link"><h4 class="title">{title}</h4></a>
 	<div class="tags">
 		{tags!.map((tag) => (
-			<a href={`/tags/${tag}`} class="tag">
-				#{tag}
+			<a href={`/tags/${tag.name}`} class="tag">
+				#{tag.name}
 			</a>
 		))
 		}
@@ -95,10 +96,15 @@ const {slug, title, pubDate, tags} = Astro.props;
 		z-index: 2;
 		pointer-events: all;
 		font-size: 1rem;
-		background-color: #ddfcff;
+		border: 2px solid #abdee3;
 		padding: 3px 5px;
 		border-radius: 7%;
 		font-weight: 700;
+		transition: background-color 0.3s ease; 
+	}
+
+	.tag:hover {
+		background-color: #abdee3;
 	}
 
 </style>
