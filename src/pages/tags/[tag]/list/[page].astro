@@ -11,24 +11,24 @@ export const prerender = true;
 
 export async function getStaticPaths() {
 	const posts = (await getEntryResponse()).contents.sort(
-		(a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+		(a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt),
 	);
 	const tags = new Set<TagModel>();
 	posts.forEach((post) => post.tags.forEach((tag) => tags.add(tag)));
 
 	let params: any[] = [];
-	
-	Array.from(tags).map(tag => {
+
+	Array.from(tags).map((tag) => {
 		const filteredPosts = posts.filter((post) => post.tags.includes(tag));
-		for (let page = 1; page <= filteredPosts.length; page++) {
-			const startIndex = (page - 1) * PAGE_SIZE
-			const endIndex = startIndex + PAGE_SIZE
+		const maxPage = Math.ceil(filteredPosts.length / PAGE_SIZE);
+
+		for (let page = 1; page <= maxPage; page++) {
+			const startIndex = (page - 1) * PAGE_SIZE;
+			const endIndex = startIndex + PAGE_SIZE;
 			params.push({
-				params: { tag: tag.name, 
-									page: page },
-				props: { 	pagePosts: posts.slice(startIndex, endIndex),
-									maxPage: Math.ceil(filteredPosts.length / PAGE_SIZE)}
-			})
+				params: { tag: tag.name, page: page },
+				props: { pagePosts: posts.slice(startIndex, endIndex), maxPage: maxPage },
+			});
 		}
 	});
 
@@ -42,9 +42,11 @@ const { pagePosts, maxPage } = Astro.props;
 <Blog title={SITE_TITLE} , description={`Tag:${tag}`}>
 	<div>
 		<Entry posts={pagePosts} />
-		<Pagination 
-			prev={(page==1)? undefined:`/tags/${tag}/list/${(Number(page)-1)}`} 
-			next={(page==maxPage)? undefined:`/tags/${tag}/list/${(Number(page)+1)}`} 
+		<Pagination
+			prev={page == 1 ? undefined : `/tags/${tag}/list/${Number(page) - 1}`}
+			next={page == maxPage
+				? undefined
+				: `/tags/${tag}/list/${Number(page) + 1}`}
 			maxPage={maxPage}
 			currentPage={page}
 		/>
