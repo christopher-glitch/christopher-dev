@@ -1,13 +1,15 @@
 ---
 import EntryCard from './EntryCard.astro';
-import type { CollectionEntry } from 'astro:content';
+import type { EntryModel } from '../../lib/model';
 
 
 interface Props {
-  posts: CollectionEntry<'entry'>[];
+  posts: EntryModel[];
 }
 
 const { posts } = Astro.props;
+
+console.log(posts[0].tags)
 ---
 <div>
 	<h4 class="heading">Entry</h4>
@@ -15,7 +17,7 @@ const { posts } = Astro.props;
 	{
 		posts.map((post) => (
 			<li>
-				<EntryCard slug={post.slug} title={post.data.title} pubDate={post.data.pubDate} tags={post.data.tags}/>
+				<EntryCard slug={post.id} title={post.title} pubDate={post.createdAt} tags={post.tags}/>
 			</li>
 		))
 	}

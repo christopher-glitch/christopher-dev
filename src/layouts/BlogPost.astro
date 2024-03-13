@@ -1,18 +1,16 @@
 ---
-import type { CollectionEntry } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import EntryMenu from '../components/menu/EntryMenu.astro';
-import type { MarkdownHeading } from 'astro';
+import type { EntryModel } from '../lib/model';
 
 interface Props {
-	entry: CollectionEntry<'entry'>['data'],
-	headings: MarkdownHeading[],
+	entry: EntryModel
 } 
 
-const { entry, headings } = Astro.props;
+const { entry } = Astro.props;
 ---
 
 <!doctype html>
@@ -27,11 +25,11 @@ const { entry, headings } = Astro.props;
 				<div class="title">
 					<h1>{entry.title}</h1>
 						<div class="date">
-							公開日: <FormattedDate date={entry.pubDate} />
+							公開日: <FormattedDate date={entry.createdAt} />
 							{
-								entry.updatedDate && (
+								entry.updatedAt && (
 									<div class="last-updated-on">
-										更新: <FormattedDate date={entry.updatedDate} />
+										更新: <FormattedDate date={entry.updatedAt} />
 									</div>
 								)
 							}
@@ -39,7 +37,7 @@ const { entry, headings } = Astro.props;
 						<div class="tags">
 							{
 								entry.tags!.map(tag =>
-									<a href={`/tags/${tag}`}>#{tag}</a>
+									<a href={`/tags/${tag.name}`}>#{tag.name}</a>
 								)
 							}
 						</div>
@@ -51,7 +49,7 @@ const { entry, headings } = Astro.props;
 						</div>
 					</article>
 					<aside>
-						<EntryMenu headings={headings}/>
+						<EntryMenu/>
 					</aside>
 				</div>
 			</section>
