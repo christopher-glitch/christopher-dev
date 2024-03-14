@@ -1,3 +1,5 @@
+import type { MicroCMSImage } from 'microcms-js-sdk';
+
 export type EntryModel = {
 	id: string;
 	createdAt: string;
@@ -8,6 +10,7 @@ export type EntryModel = {
 	description: string;
 	content: string;
 	tags: TagModel[];
+	heroImage?: MicroCMSImage;
 };
 
 export type TagModel = {
