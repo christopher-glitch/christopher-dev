@@ -51,7 +51,7 @@ const { entry } = Astro.props;
 						</div>
 					</article>
 					<aside>
-						<EntryMenu />
+						<EntryMenu content={entry.content}/>
 					</aside>
 				</div>
 			</section>
@@ -140,7 +140,7 @@ const { entry } = Astro.props;
 
 			.prose {
 				padding: 2em;
-				font-weight: 700;
+				color: rgb(32, 32, 32);
 			}
 		</style>
 	</body>
