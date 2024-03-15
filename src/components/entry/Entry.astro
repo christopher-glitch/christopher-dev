@@ -8,8 +8,6 @@ interface Props {
 }
 
 const { posts } = Astro.props;
-
-console.log(posts[0].tags)
 ---
 <div>
 	<h4 class="heading">Entry</h4>
@@ -17,7 +15,7 @@ console.log(posts[0].tags)
 	{
 		posts.map((post) => (
 			<li>
-				<EntryCard slug={post.id} title={post.title} pubDate={post.createdAt} tags={post.tags}/>
+				<EntryCard slug={post.id} title={post.title} pubDate={post.publishedAt} tags={post.tags}/>
 			</li>
 		))
 	}

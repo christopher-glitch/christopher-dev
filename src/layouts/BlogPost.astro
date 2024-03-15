@@ -11,7 +11,7 @@ interface Props {
 }
 
 const { entry } = Astro.props;
-const noImage = "/blog-placeholder-about.jpg";
+const noImage = "/no-image.png";
 ---
 
 <!doctype html>
@@ -30,15 +30,8 @@ const noImage = "/blog-placeholder-about.jpg";
 					<h1>{entry.title}</h1>
 					<div class="date">
 						<div>
-							公開: <FormattedDate date={entry.createdAt} />
+							公開: <FormattedDate date={entry.publishedAt} />
 						</div>
-						{
-							entry.updatedAt && (
-								<div>
-									更新: <FormattedDate date={entry.updatedAt} />
-								</div>
-							)
-						}
 					</div>
 					<div class="tags">
 						{
@@ -150,6 +143,7 @@ const noImage = "/blog-placeholder-about.jpg";
 			.prose {
 				padding: 2em;
 				color: rgb(32, 32, 32);
+				font-size: 14px;
 			}
 		</style>
 	</body>

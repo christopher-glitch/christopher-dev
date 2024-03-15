@@ -16,7 +16,7 @@ export const getEntryDetail = async (
 	queries?: MicroCMSQueries
 ) => {
 	return await client.getListDetail<EntryModel>({
-		endpoint: "blogs",
+		endpoint: "entries",
 		contentId,
 		queries,
 	});

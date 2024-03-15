@@ -6,20 +6,20 @@ import Pagination from "../../components/Pagination.astro";
 import { getEntryResponse } from "../../lib/client";
 import type { TagModel } from "../../lib/model";
 
-export const prerender = true;
-
 export async function getStaticPaths() {
 	const posts = (await getEntryResponse()).contents.sort(
-		(a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+		(a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt),
 	);
-	const tags = new Set<TagModel>();
-  posts.forEach(post => post.tags.forEach(tag => tags.add(tag)));
+	const tags = new Set<String>();
+	posts.forEach((post) => post.tags.forEach((tag) => tags.add(tag.name)));
 
-  return Array.from(tags).map(tag => ({
-    params: { tag: tag.name },
-    props: { 	filteredPosts: posts.filter((post) => post.tags.includes(tag)),
-							maxPage: Math.ceil(posts.length/PAGE_SIZE)},
-  }));
+	return Array.from(tags).map((tag) => ({
+		params: { tag: tag },
+		props: {
+			filteredPosts: posts.filter((post) => post.tags.find((t) => t.name === tag)),
+			maxPage: Math.ceil(posts.length / PAGE_SIZE),
+		},
+	}));
 }
 
 const { tag } = Astro.params;
@@ -27,15 +27,14 @@ const { filteredPosts, maxPage } = Astro.props;
 const headFilteredPosts = filteredPosts.slice(0, PAGE_SIZE);
 ---
 
-<Blog title={SITE_TITLE}, description={`Tag:${tag}`}>
+<Blog title={SITE_TITLE} , description={`Tag:${tag}`}>
 	<div>
 		<Entry posts={headFilteredPosts} />
-		<Pagination 
-			prev={ undefined } 
-			next={(maxPage==1)? undefined:`/tags/${tag}/list/2`} 
+		<Pagination
+			prev={undefined}
+			next={maxPage == 1 ? undefined : `/tags/${tag}/list/2`}
 			maxPage={maxPage}
 			currentPage={1}
 		/>
 	</div>
 </Blog>
-

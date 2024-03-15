@@ -2,14 +2,16 @@ import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
-import vercel from "@astrojs/vercel/serverless";
+import vercelStatic from '@astrojs/vercel/static';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://example.com',
+  site: 'https://christph-memorandum.com',
   integrations: [mdx(), sitemap()],
-  output: 'server',
-  adapter: vercel({
-    webAnalytics: { enabled: true }
-  }),
+  output: 'static',
+  adapter: vercelStatic(
+    {
+      webAnalytics: { enabled: true }
+    }
+  ),
 });

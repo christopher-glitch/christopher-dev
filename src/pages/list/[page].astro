@@ -7,8 +7,6 @@ import Pagination from "../../components/Pagination.astro";
 import { SITE_DESCRIPTION } from "../../consts";
 import { getEntryResponse } from "../../lib/client";
 
-export const prerender = true;
-
 export async function getStaticPaths() {
 	const posts = (await getEntryResponse()).contents.sort(
 		(a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt),

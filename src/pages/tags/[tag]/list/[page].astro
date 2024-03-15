@@ -1,13 +1,10 @@
 ---
 import { SITE_TITLE, PAGE_SIZE } from "../../../../consts";
-import { getCollection } from "astro:content";
 import Entry from "../../../../components/entry/Entry.astro";
 import Blog from "../../../../layouts/Blog.astro";
 import Pagination from "../../../../components/Pagination.astro";
 import { getEntryResponse } from "../../../../lib/client";
 import type { TagModel } from "../../../../lib/model";
-
-export const prerender = true;
 
 export async function getStaticPaths() {
 	const posts = (await getEntryResponse()).contents.sort(
