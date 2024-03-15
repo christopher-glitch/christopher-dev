@@ -5,43 +5,43 @@ import Entry from "../../components/entry/Entry.astro";
 import Blog from "../../layouts/Blog.astro";
 import Pagination from "../../components/Pagination.astro";
 import { SITE_DESCRIPTION } from "../../consts";
-
-export const prerender = true;
-
+import { getEntryResponse } from "../../lib/client";
 
 export async function getStaticPaths() {
-	const posts = (await getCollection("entry")).sort(
-		(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+	const posts = (await getEntryResponse()).contents.sort(
+		(a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt),
 	);
 	let params: any[] = [];
 
-	for (let i = 1; i <= posts.length; i++) {
+	const maxPage = Math.ceil(posts.length / PAGE_SIZE);
+
+	for (let page = 1; page <= maxPage; page++) {
+		const startIndex = (page - 1) * PAGE_SIZE;
+		const endIndex = startIndex + PAGE_SIZE;
 		params.push({
-			params: { page: i }
-		})
+			params: { page: page },
+			props: {
+				pagePosts: posts.slice(startIndex, endIndex),
+				maxPage: maxPage,
+			},
+		});
 	}
 
 	return params;
 }
 
 const { page } = Astro.params;
-
-const startIndex = (page - 1) * PAGE_SIZE
-const endIndex = startIndex + PAGE_SIZE
-const posts = (await getCollection("entry")).sort(
-		(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
-const maxPage = Math.ceil(posts.length / PAGE_SIZE);
-const postAtThisPage = posts.slice(startIndex, endIndex);
+const { pagePosts, maxPage } = Astro.props;
 ---
 
-<Blog title={SITE_TITLE}, description={SITE_DESCRIPTION}>
+<Blog title={SITE_TITLE} , description={SITE_DESCRIPTION}>
 	<div>
-		<Entry posts={postAtThisPage} />
-		<Pagination 
-			prev={(page==1)? undefined:`/list/${(Number(page)-1)}`} 
-			next={(page==maxPage)? undefined:`/list/${(Number(page)+1)}`} 
-			maxPage={maxPage} 
-			currentPage={page}/>
+		<Entry posts={pagePosts} />
+		<Pagination
+			prev={page == 1 ? undefined : `/list/${Number(page) - 1}`}
+			next={page == maxPage ? undefined : `/list/${Number(page) + 1}`}
+			maxPage={maxPage}
+			currentPage={page}
+		/>
 	</div>
 </Blog>

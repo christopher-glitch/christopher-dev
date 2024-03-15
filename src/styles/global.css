@@ -4,6 +4,8 @@
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
  */
 
+
+
 :root {
 	--accent: #000a52;
 	--black: 15, 18, 25;
@@ -126,7 +128,7 @@ table {
 }
 
 img {
-	width: 100%;
+	width: 80%;
 	height: auto;
 	border-radius: 8px;
 }
@@ -140,12 +142,11 @@ code {
 
 pre {
 	width: auto;
-	padding: 1em;
-	border-radius: 8px;
 }
 
 pre>code {
 	all: unset;
+	
 }
 
 span {

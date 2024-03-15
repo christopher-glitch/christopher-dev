@@ -1,27 +1,31 @@
 ---
 import { SITE_TITLE, PAGE_SIZE } from "../../../../consts";
-import { getCollection } from "astro:content";
 import Entry from "../../../../components/entry/Entry.astro";
 import Blog from "../../../../layouts/Blog.astro";
 import Pagination from "../../../../components/Pagination.astro";
-
-export const prerender = true;
+import { getEntryResponse } from "../../../../lib/client";
+import type { TagModel } from "../../../../lib/model";
 
 export async function getStaticPaths() {
-	const posts = (await getCollection("entry")).sort(
-		(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+	const posts = (await getEntryResponse()).contents.sort(
+		(a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt),
 	);
-	const tags = new Set<string>();
-	posts.forEach((post) => post.data.tags?.forEach((tag) => tags.add(tag)));
+	const tags = new Set<TagModel>();
+	posts.forEach((post) => post.tags.forEach((tag) => tags.add(tag)));
 
 	let params: any[] = [];
-	
-	Array.from(tags).map(tag => {
-		const filteredPosts = posts.filter((post) => post.data.tags?.includes(tag));
-		for (let i = 1; i <= filteredPosts.length; i++) {
+
+	Array.from(tags).map((tag) => {
+		const filteredPosts = posts.filter((post) => post.tags.includes(tag));
+		const maxPage = Math.ceil(filteredPosts.length / PAGE_SIZE);
+
+		for (let page = 1; page <= maxPage; page++) {
+			const startIndex = (page - 1) * PAGE_SIZE;
+			const endIndex = startIndex + PAGE_SIZE;
 			params.push({
-				params: { tag: tag, page: i}
-			})
+				params: { tag: tag.name, page: page },
+				props: { pagePosts: posts.slice(startIndex, endIndex), maxPage: maxPage },
+			});
 		}
 	});
 
@@ -29,23 +33,17 @@ export async function getStaticPaths() {
 }
 
 const { tag, page } = Astro.params;
-
-const startIndex = (page - 1) * PAGE_SIZE
-const endIndex = startIndex + PAGE_SIZE
-const posts = (await getCollection("entry")).sort(
-		(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-).filter((post) => post.data.tags?.includes(tag));
-const maxPage = Math.ceil(posts.length / PAGE_SIZE);
-
-const postAtThisPage = posts.slice(startIndex, endIndex)
+const { pagePosts, maxPage } = Astro.props;
 ---
 
 <Blog title={SITE_TITLE} , description={`Tag:${tag}`}>
 	<div>
-		<Entry posts={postAtThisPage} />
-		<Pagination 
-			prev={(page==1)? undefined:`/tags/${tag}/list/${(Number(page)-1)}`} 
-			next={(page==maxPage)? undefined:`/tags/${tag}/list/${(Number(page)+1)}`} 
+		<Entry posts={pagePosts} />
+		<Pagination
+			prev={page == 1 ? undefined : `/tags/${tag}/list/${Number(page) - 1}`}
+			next={page == maxPage
+				? undefined
+				: `/tags/${tag}/list/${Number(page) + 1}`}
 			maxPage={maxPage}
 			currentPage={page}
 		/>

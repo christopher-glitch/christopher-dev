@@ -1,0 +1,28 @@
+---
+import BlogPost from "../../layouts/BlogPost.astro";
+import { getEntryResponse } from "../../lib/client";
+import * as cheerio from "cheerio";
+import hljs from "highlight.js";
+import "highlight.js/styles/hybrid.css";
+
+export async function getStaticPaths() {
+	const posts = (await getEntryResponse()).contents;
+	return posts.map((post) => ({
+		params: { id: post.id },
+		props: post,
+	}));
+}
+
+const post = Astro.props;
+
+const $ = cheerio.load(post.content);
+$("pre code").each((_, elm) => {
+	const result = hljs.highlightAuto($(elm).text());
+	$(elm).html(result.value);
+	$(elm).addClass("hljs");
+});
+---
+
+<BlogPost entry={post}>
+	<div set:html={$.html()} />
+</BlogPost>

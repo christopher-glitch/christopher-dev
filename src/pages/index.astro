@@ -1,18 +1,14 @@
 ---
 import Blog from '../layouts/Blog.astro';
 import { SITE_TITLE, SITE_DESCRIPTION, PAGE_SIZE } from '../consts';
-import { getCollection } from 'astro:content';
 import Entry from '../components/entry/Entry.astro';
 import Pagination from '../components/Pagination.astro';
+import { getEntryResponse } from '../lib/client';
 
-export const prerender = true;
+const response = await getEntryResponse();
 
-const posts = (await getCollection('entry')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
-
-const headPosts = posts.slice(0, PAGE_SIZE);
-const maxPage = Math.ceil(posts.length/PAGE_SIZE);
+const headPosts = response.contents.slice(0, PAGE_SIZE);
+const maxPage = Math.ceil(response.totalCount/PAGE_SIZE);
 ---
 
 <Blog title={SITE_TITLE}, description={SITE_DESCRIPTION}>
@@ -20,7 +16,7 @@ const maxPage = Math.ceil(posts.length/PAGE_SIZE);
 		<Entry posts={headPosts} />
 		<Pagination 
 			prev={ undefined } 
-			next={(maxPage==1)? undefined:`/list/2`} 
+			next={(maxPage < 1)? undefined:`/list/2`} 
 			maxPage={maxPage}
 			currentPage={1}
 		/>

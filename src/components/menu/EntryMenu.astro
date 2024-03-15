@@ -1,14 +1,11 @@
 ---
-import type { MarkdownHeading } from "astro";
 import Agenda from "./Agenda.astro";
-import Profile from "./Profile.astro";
+import { renderToc } from "../../lib/render_toc";
 
 interface Props {
-	headings: MarkdownHeading[],
-} 
+	content: string;
+}
 
-const { headings } = Astro.props;
+const { content } = Astro.props;
 ---
-
-<Profile />
-{(headings.length > 0) && <Agenda headings={headings}/> }
+<Agenda  headings={renderToc(content)}/>
